@@ -20,11 +20,13 @@ public class WebScraper
     public List<Item> getItems(String url)
     {
 
-        WebClient webClient = new WebClient(BrowserVersion.CHROME);
+        WebClient webClient = new WebClient(BrowserVersion.BEST_SUPPORTED);
         webClient.getOptions().setCssEnabled(false);
         webClient.getOptions().setThrowExceptionOnFailingStatusCode(false);
         webClient.getOptions().setThrowExceptionOnScriptError(false);
         webClient.getOptions().setPrintContentOnFailingStatusCode(false);
+        webClient.getOptions().setJavaScriptEnabled(false);
+        webClient.getOptions().setThrowExceptionOnFailingStatusCode(false);
         List<Item> items = new ArrayList<>();
         try
         {
@@ -39,6 +41,7 @@ public class WebScraper
                 for (HtmlTableCell cell : row.getCells().subList(1, row.getCells().size() - 4))
                 {
                     item.stats[i] = Float.parseFloat(cell.getTextContent());
+                    // System.out.println(item.stats[i]);
                     i++;
                 }
                 item.weight = Float.parseFloat(row.getCells().get(14).getTextContent());
