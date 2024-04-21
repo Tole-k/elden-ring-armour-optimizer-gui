@@ -36,17 +36,27 @@ public class WebScraper
             table.getRows().stream().skip(1).forEach(row ->
             {
                 Item item = new Item();
-                item.name = row.getCells().getFirst().getTextContent();
+                item.name = row.getCells().getFirst().getTextContent().trim();
                 int i = 0;
                 for (HtmlTableCell cell : row.getCells().subList(1, row.getCells().size() - 4))
                 {
-                    item.stats[i] = Float.parseFloat(cell.getTextContent());
-                    // System.out.println(item.stats[i]);
+                    try
+                    {
+                        item.stats[i] = Float.parseFloat(cell.getTextContent().trim());
+                    } catch (NumberFormatException e)
+                    {
+                        item.stats[i] = Float.parseFloat(cell.getTextContent().replace("\u00a0",""));
+                    }
                     i++;
                 }
-                item.weight = Float.parseFloat(row.getCells().get(14).getTextContent());
+                try
+                {
+                    item.weight = Float.parseFloat(row.getCells().get(14).getTextContent().trim());
+                } catch (NumberFormatException e)
+                {
+                    item.weight = Float.parseFloat(row.getCells().get(14).getTextContent().replace("\u00a0",""));
+                }
                 items.add(item);
-
             });
             webClient.close();
 
