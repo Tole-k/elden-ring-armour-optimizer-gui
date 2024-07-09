@@ -13,12 +13,15 @@ import java.util.List;
 
 public class WebScraper
 {
-    public WebScraper()
+    private static WebScraper self=null;
+    public static WebScraper getInstance()
     {
+        if(self==null)
+            self=new WebScraper();
+        return self;
     }
 
-    public List<Item> getItems(String url)
-    {
+    public List<Item> getItems(String url) {
 
         WebClient webClient = new WebClient(BrowserVersion.BEST_SUPPORTED);
         webClient.getOptions().setCssEnabled(false);
@@ -32,13 +35,13 @@ public class WebScraper
         {
             HtmlPage page = webClient.getPage(url);
             webClient.getCurrentWindow().getJobManager().removeAllJobs();
-            HtmlTable table = page.getFirstByXPath("//table");
+            HtmlTable table = page.querySelector("table");
             table.getRows().stream().skip(1).forEach(row ->
             {
                 Item item = new Item();
                 item.name = row.getCells().getFirst().getTextContent().trim();
                 int i = 0;
-                for (HtmlTableCell cell : row.getCells().subList(1, row.getCells().size() - 4))
+                for (HtmlTableCell cell : row.getCells().subList(1, row.getCells().size() - 5))
                 {
                     try
                     {

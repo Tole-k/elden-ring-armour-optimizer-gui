@@ -6,22 +6,30 @@ import java.util.*;
 
 public class Optimizer
 {
+    private static Optimizer self = null;
     private final List<Item> helms;
     private final List<Item> chests;
-    private final List<Item> legs;
-    private final List<Item> boots;
+    private final List<Item> gauntlets;
+    private final List<Item> legArmour;
     private final int priority;
     private final float weight_limit;
-    public Optimizer(List<Item> helms, List<Item> chests, List<Item> leggings, List<Item> boots, int priority, float weight_limit)
+    public static Optimizer getInstance(List<Item> helms, List<Item> chests, List<Item> gauntlets, List<Item> legArmour, int priority, float weight_limit)
+    {
+        if(self == null)
+        {
+            self = new Optimizer(helms, chests, gauntlets, legArmour, priority, weight_limit);
+        }
+        return self;
+    }
+    private Optimizer(List<Item> helms, List<Item> chests, List<Item> gauntlets, List<Item> legArmour, int priority, float weight_limit)
     {
         this.helms = helms;
         this.chests = chests;
-        this.legs = leggings;
-        this.boots = boots;
+        this.gauntlets = gauntlets;
+        this.legArmour = legArmour;
         this.priority = priority;
         this.weight_limit = weight_limit;
     }
-
     public void eliminate_suboptimal(List<Item> items, int priority)
     {
         Map<Float, Float> hm = new HashMap<>();
@@ -55,12 +63,12 @@ public class Optimizer
     {
         add_naked(helms);
         add_naked(chests);
-        add_naked(legs);
-        add_naked(boots);
+        add_naked(gauntlets);
+        add_naked(legArmour);
         eliminate_suboptimal(helms, priority);
         eliminate_suboptimal(chests, priority);
-        eliminate_suboptimal(legs, priority);
-        eliminate_suboptimal(boots, priority);
+        eliminate_suboptimal(gauntlets, priority);
+        eliminate_suboptimal(legArmour, priority);
     }
     public void findBestSet()
     {
@@ -73,35 +81,35 @@ public class Optimizer
                 continue;
             }
             remaining_weight = weight_limit - chest.weight;
-            for (Item leg_armor : legs)
+            for (Item gauntlets : gauntlets)
             {
-                if(leg_armor.weight > remaining_weight)
+                if(gauntlets.weight > remaining_weight)
                 {
                     continue;
                 }
-                remaining_weight = weight_limit - chest.weight - leg_armor.weight;
+                remaining_weight = weight_limit - chest.weight - gauntlets.weight;
                 for(Item helm: helms)
                 {
                     if(helm.weight > remaining_weight)
                     {
                         continue;
                     }
-                    remaining_weight = weight_limit - chest.weight- leg_armor.weight - helm.weight;
-                    for(Item boot: boots)
+                    remaining_weight = weight_limit - chest.weight- gauntlets.weight - helm.weight;
+                    for(Item legArmour: legArmour)
                     {
-                        if(boot.weight > remaining_weight)
+                        if(legArmour.weight > remaining_weight)
                         {
                             continue;
                         }
-                        float stats = helm.stats[priority]+chest.stats[priority]+leg_armor.stats[priority]+boot.stats[priority];
+                        float stats = helm.stats[priority]+chest.stats[priority]+gauntlets.stats[priority]+legArmour.stats[priority];
                         if(stats > best)
                         {
                             best = stats;
                             bestSet.clear();
                             bestSet.add(helm);
                             bestSet.add(chest);
-                            bestSet.add(boot);
-                            bestSet.add(leg_armor);
+                            bestSet.add(legArmour);
+                            bestSet.add(gauntlets);
                         }
                     }
                 }
