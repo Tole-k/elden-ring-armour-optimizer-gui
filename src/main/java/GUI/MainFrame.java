@@ -18,7 +18,7 @@ public class MainFrame extends JFrame
         tabbedPane.addTab("Inventory", inventoryPanel);
         tabbedPane.addTab("Optimizer", optimizerPanel);
         add(tabbedPane);
-        setVisible(true);
+        //setVisible(true);
     }
 
 
