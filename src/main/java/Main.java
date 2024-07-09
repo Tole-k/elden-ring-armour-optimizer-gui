@@ -1,6 +1,5 @@
 import item.Item;
 import optimizer.Optimizer;
-import scraper.WebScraper;
 
 import java.util.List;
 import java.util.Scanner;

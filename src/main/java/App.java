@@ -1,6 +1,8 @@
 import GUI.MainFrame;
 import item.Item;
+import loader.DataLoader;
 import optimizer.Optimizer;
+import loader.CsvLoader;
 
 import java.util.List;
 
@@ -16,5 +18,7 @@ public class App
     }
     public void run()
     {
+        DataLoader dataLoader = new DataLoader();
+        dataLoader.loadFromCsv();
     }
 }

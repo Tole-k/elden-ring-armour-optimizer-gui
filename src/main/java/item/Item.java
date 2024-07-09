@@ -7,7 +7,6 @@ public class Item
         this.stats = stats;
         this.weight = weight;
     }
-    public Item(){}
 
     public String name;
     public float[] stats = new float[13];
