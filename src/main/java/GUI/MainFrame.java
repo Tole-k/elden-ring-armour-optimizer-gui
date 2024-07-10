@@ -1,14 +1,13 @@
 package GUI;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionListener;
 
 public class MainFrame extends JFrame
 {
     InventoryPanel inventoryPanel;
     OptimizerPanel optimizerPanel;
     public MainFrame()    {
-        super("Welcome Tarnished");
+        super("Welcome Tarnished!");
         getContentPane().setBackground(Color.BLACK);
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

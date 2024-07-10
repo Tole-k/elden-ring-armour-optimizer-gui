@@ -1,4 +1,4 @@
-package loader;
+package csv;
 import item.Item;
 
 import java.io.*;
