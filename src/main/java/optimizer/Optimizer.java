@@ -6,29 +6,25 @@ import java.util.*;
 
 public class Optimizer
 {
-    private static Optimizer self = null;
-    private final List<Item> helms;
-    private final List<Item> chests;
-    private final List<Item> gauntlets;
-    private final List<Item> legArmour;
-    private final int priority;
-    private final float weight_limit;
-    public static Optimizer getInstance(List<Item> helms, List<Item> chests, List<Item> gauntlets, List<Item> legArmour, int priority, float weight_limit)
-    {
-        if(self == null)
-        {
-            self = new Optimizer(helms, chests, gauntlets, legArmour, priority, weight_limit);
-        }
-        return self;
-    }
-    private Optimizer(List<Item> helms, List<Item> chests, List<Item> gauntlets, List<Item> legArmour, int priority, float weight_limit)
+    private List<Item> helms;
+    private List<Item> chests;
+    private List<Item> gauntlets;
+    private List<Item> legArmour;
+    private int priority;
+    private float weight_limit;
+    private float base_weight;
+    private static final Item naked = new Item("Naked",new float[14]);
+    private Item bestHelm;
+    private Item bestChest;
+    private Item bestGauntlet;
+    private Item bestLeg;
+    private float coefficient;
+    public Optimizer(List<Item> helms, List<Item> chests, List<Item> gauntlets, List<Item> legArmour)
     {
         this.helms = helms;
         this.chests = chests;
         this.gauntlets = gauntlets;
         this.legArmour = legArmour;
-        this.priority = priority;
-        this.weight_limit = weight_limit;
     }
     public void eliminate_suboptimal(List<Item> items, int priority)
     {
@@ -51,72 +47,136 @@ public class Optimizer
             }
         }
     }
-    public void add_naked(List<Item>items)
-    {
-        String name = "Naked";
-        float[] stats = new float[14];
-        Item item = new Item(name,stats);
-        items.add(item);
-    }
     public void preprocess()
     {
-        add_naked(helms);
-        add_naked(chests);
-        add_naked(gauntlets);
-        add_naked(legArmour);
+        helms.add(naked);
+        chests.add(naked);
+        gauntlets.add(naked);
+        legArmour.add(naked);
         eliminate_suboptimal(helms, priority);
         eliminate_suboptimal(chests, priority);
         eliminate_suboptimal(gauntlets, priority);
         eliminate_suboptimal(legArmour, priority);
     }
-    public void findBestSet()
+    public void setupBaseState(Item helm, Item chest, Item gauntlet, Item leg, float base_weight)
     {
+        bestHelm = helm;
+        bestChest = chest;
+        bestGauntlet = gauntlet;
+        bestLeg = leg;
+        this.base_weight = base_weight;
+        if(helm != null)
+        {
+            this.base_weight += helm.stats[13];
+        }
+        if(chest != null)
+        {
+            this.base_weight += chest.stats[13];
+        }
+        if(gauntlet != null)
+        {
+            this.base_weight += gauntlet.stats[13];
+        }
+        if(leg != null)
+        {
+            this.base_weight += leg.stats[13];
+        }
+    }
+    public List<Item> findBestSet(int minPoiseLevel)
+    {
+        if(base_weight > coefficient*weight_limit)
+        {
+            return null;
+        }
+        if(bestHelm != null && bestChest != null && bestGauntlet != null && bestLeg != null)
+        {
+            return List.of(bestHelm,bestChest,bestGauntlet,bestLeg);
+        }
+        if(bestHelm != null)
+        {
+            helms = List.of(bestHelm);
+        }
+        if(bestChest != null)
+        {
+            chests = List.of(bestChest);
+        }
+        if(bestGauntlet != null)
+        {
+            gauntlets = List.of(bestGauntlet);
+        }
+        if(bestLeg != null)
+        {
+            legArmour = List.of(bestLeg);
+        }
         float best = -1;
-        List<Item> bestSet = new ArrayList<>();
-        float remaining_weight = weight_limit;
-        for(Item chest : chests){
-            if(chest.stats[13] >remaining_weight)
+        for(Item chest:chests)
+        {
+            if(chest.stats[13] + base_weight > coefficient*weight_limit)
             {
                 continue;
             }
-            remaining_weight = weight_limit - chest.stats[13];
-            for (Item gauntlets : gauntlets)
+            for(Item leg:legArmour)
             {
-                if(gauntlets.stats[13] > remaining_weight)
+                if(chest.stats[13] + leg.stats[13] + base_weight > coefficient*weight_limit)
                 {
                     continue;
                 }
-                remaining_weight = weight_limit - chest.stats[13] - gauntlets.stats[13];
-                for(Item helm: helms)
+                for(Item helm:helms)
                 {
-                    if(helm.stats[13] > remaining_weight)
+                    if(chest.stats[13] + leg.stats[13] + helm.stats[13] + base_weight > coefficient*weight_limit)
                     {
                         continue;
                     }
-                    remaining_weight = weight_limit - chest.stats[13]- gauntlets.stats[13] - helm.stats[13];
-                    for(Item legArmour: legArmour)
+                    for(Item gauntlet:gauntlets)
                     {
-                        if(legArmour.stats[13] > remaining_weight)
+                        if (chest.stats[13] + leg.stats[13] + helm.stats[13] + gauntlet.stats[13] + base_weight > coefficient*weight_limit)
                         {
                             continue;
                         }
-                        float stats = helm.stats[priority]+chest.stats[priority]+gauntlets.stats[priority]+legArmour.stats[priority];
-                        if(stats > best)
+                        if(chest.stats[12] + leg.stats[12] + helm.stats[12] + gauntlet.stats[12] < minPoiseLevel)
                         {
-                            best = stats;
-                            bestSet.clear();
-                            bestSet.add(helm);
-                            bestSet.add(chest);
-                            bestSet.add(legArmour);
-                            bestSet.add(gauntlets);
+                            continue;
+                        }
+                        if(chest.stats[priority] + leg.stats[priority] + helm.stats[priority] + gauntlet.stats[priority] > best)
+                        {
+                            best = chest.stats[priority] + leg.stats[priority] + helm.stats[priority] + gauntlet.stats[priority];
+                            bestHelm = helm;
+                            bestChest = chest;
+                            bestGauntlet = gauntlet;
+                            bestLeg = leg;
                         }
                     }
                 }
             }
         }
-        System.out.println(best);
-        for (Item item : bestSet) {
-            System.out.println(item.name);
-        }
+        assert bestLeg != null;
+        assert bestGauntlet != null;
+        assert bestChest != null;
+        assert bestHelm != null;
+        return List.of(bestHelm,bestChest,bestGauntlet,bestLeg);
+    }
+
+    public int getPriority() {
+        return priority;
+    }
+
+    public void setPriority(int priority) {
+        this.priority = priority;
+    }
+
+    public float getWeight_limit() {
+        return weight_limit;
+    }
+
+    public void setWeight_limit(float weight_limit) {
+        this.weight_limit = weight_limit;
+    }
+
+    public float getCoefficient() {
+        return coefficient;
+    }
+
+    public void setCoefficient(float coefficient) {
+        this.coefficient = coefficient;
     }
 }
