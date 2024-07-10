@@ -31,7 +31,7 @@ public class InventoryManager {
     {
         inventoryLoader.connect();
         inventory.setHelms(inventoryLoader.showInventory("Helms"));
-        inventory.setChestArmour(inventoryLoader.showInventory("ChestsArmour"));
+        inventory.setChestArmour(inventoryLoader.showInventory("ChestArmour"));
         inventory.setGauntlets(inventoryLoader.showInventory("Gauntlets"));
         inventory.setLegArmour(inventoryLoader.showInventory("LegArmour"));
         inventoryLoader.disconnect();

@@ -28,8 +28,8 @@ public class ArmouryManager {
         armouryLoader.connect();
         armouryLoader.deleteTable("Helms");
         armouryLoader.loadIntoArmoury("Helms",helms);
-        armouryLoader.deleteTable("ChestsArmour");
-        armouryLoader.loadIntoArmoury("ChestsArmour",chestsArmour);
+        armouryLoader.deleteTable("ChestArmour");
+        armouryLoader.loadIntoArmoury("ChestArmour",chestsArmour);
         armouryLoader.deleteTable("Gauntlets");
         armouryLoader.loadIntoArmoury("Gauntlets",gauntlets);
         armouryLoader.deleteTable("LegArmour");
@@ -39,7 +39,7 @@ public class ArmouryManager {
     public void buildArmoury(){
         armouryLoader.connect();
         armoury.setHelms(armouryLoader.loadFromArmoury("Helms"));
-        armoury.setChestArmour(armouryLoader.loadFromArmoury("ChestsArmour"));
+        armoury.setChestArmour(armouryLoader.loadFromArmoury("ChestArmour"));
         armoury.setGauntlets(armouryLoader.loadFromArmoury("Gauntlets"));
         armoury.setLegArmour(armouryLoader.loadFromArmoury("LegArmour"));
         armouryLoader.disconnect();

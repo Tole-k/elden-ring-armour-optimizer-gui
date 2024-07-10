@@ -4,6 +4,7 @@ import item.Item;
 import itemsets.Inventory;
 
 import java.util.*;
+import java.util.stream.IntStream;
 
 public class Optimizer
 {
@@ -33,18 +34,31 @@ public class Optimizer
     }
     public void eliminate_suboptimal(List<Item> items, int priority)
     {
-        Map<Float, Float> hm = new HashMap<>();
+        Map<Float, Item> hm = new HashMap<>();
         Iterator<Item> it = items.iterator();
         while (it.hasNext())
         {
             Item item = it.next();
             if(!hm.containsKey(item.stats[13]))
             {
-                hm.put(item.stats[13],item.stats[priority]);
+                hm.put(item.stats[13],item);
             }
-            else if (hm.get(item.stats[13]) < item.stats[priority])
+            else if (hm.get(item.stats[13]).stats[priority] < item.stats[priority])
             {
-                hm.put(item.stats[13],item.stats[priority]);
+                hm.put(item.stats[13],item);
+            }
+            else if (hm.get(item.stats[13]).stats[priority] == item.stats[priority])
+            {
+                double itemSum = IntStream.range(0,item.stats.length).mapToDouble(i->item.stats[i]).sum();
+                double othersum = IntStream.range(0,hm.get(item.stats[13]).stats.length).mapToDouble(i->hm.get(item.stats[13]).stats[i]).sum();
+                if(itemSum>othersum)
+                {
+                    hm.put(item.stats[13],item);
+                }
+                else
+                {
+                    it.remove();
+                }
             }
             else
             {
@@ -74,28 +88,12 @@ public class Optimizer
         this.coefficient = coefficient;
         this.base_weight = base_weight;
         this.minPoiseLevel = minPoiseLevel;
-        if(helm != null)
-        {
-            this.base_weight += helm.stats[13];
-        }
-        if(chest != null)
-        {
-            this.base_weight += chest.stats[13];
-        }
-        if(gauntlet != null)
-        {
-            this.base_weight += gauntlet.stats[13];
-        }
-        if(leg != null)
-        {
-            this.base_weight += leg.stats[13];
-        }
         preprocess();
     }
     public List<Item> findBestSet()
     {
         boolean done = false;
-        if(base_weight > coefficient*weight_limit)
+        if(base_weight >= coefficient*weight_limit)
         {
             return null;
         }
@@ -122,25 +120,25 @@ public class Optimizer
         float best = -1;
         for(Item chest:chests)
         {
-            if(chest.stats[13] + base_weight > coefficient*weight_limit)
+            if(chest.stats[13] + base_weight >= coefficient*weight_limit)
             {
                 continue;
             }
             for(Item leg:legArmour)
             {
-                if(chest.stats[13] + leg.stats[13] + base_weight > coefficient*weight_limit)
+                if(chest.stats[13] + leg.stats[13] + base_weight >= coefficient*weight_limit)
                 {
                     continue;
                 }
                 for(Item helm:helms)
                 {
-                    if(chest.stats[13] + leg.stats[13] + helm.stats[13] + base_weight > coefficient*weight_limit)
+                    if(chest.stats[13] + leg.stats[13] + helm.stats[13] + base_weight >= coefficient*weight_limit)
                     {
                         continue;
                     }
                     for(Item gauntlet:gauntlets)
                     {
-                        if (chest.stats[13] + leg.stats[13] + helm.stats[13] + gauntlet.stats[13] + base_weight > coefficient*weight_limit)
+                        if (chest.stats[13] + leg.stats[13] + helm.stats[13] + gauntlet.stats[13] + base_weight >= coefficient*weight_limit)
                         {
                             continue;
                         }
@@ -148,10 +146,14 @@ public class Optimizer
                         {
                             continue;
                         }
-                        if(chest.stats[priority] + leg.stats[priority] + helm.stats[priority] + gauntlet.stats[priority] > best)
+                        if(chest.id==70 && gauntlet.id==100 && leg.id == 49)
+                        {
+                            System.out.println("siema");
+                        }
+                        if(calcDefense(chest.stats[priority],leg.stats[priority],helm.stats[priority],gauntlet.stats[priority]) > best)
                         {
                             done=true;
-                            best = chest.stats[priority] + leg.stats[priority] + helm.stats[priority] + gauntlet.stats[priority];
+                            best = calcDefense(chest.stats[priority],leg.stats[priority],helm.stats[priority],gauntlet.stats[priority]);
                             bestHelm = helm;
                             bestChest = chest;
                             bestGauntlet = gauntlet;
@@ -166,6 +168,10 @@ public class Optimizer
             return null;
         }
         return List.of(bestHelm,bestChest,bestGauntlet,bestLeg);
+    }
+    public float calcDefense(float val1,float val2,float val3,float val4)
+    {
+        return 100*(1-(1-val1/100)*(1-val2/100)*(1-val3/100)*(1-val4/100));
     }
 
     public int getPriority() {

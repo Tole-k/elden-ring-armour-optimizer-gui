@@ -71,16 +71,16 @@ public class App
                         switch (option2)
                         {
                             case 1:
-                                inventoryManager.updateInventory("HelmsInv",toAdd,List.of());
+                                inventoryManager.updateInventory("Helms",toAdd,List.of());
                                 break;
                             case 2:
-                                inventoryManager.updateInventory("ChestsInv",toAdd,List.of());
+                                inventoryManager.updateInventory("ChestArmour",toAdd,List.of());
                                 break;
                             case 3:
-                                inventoryManager.updateInventory("GauntletsInv",toAdd,List.of());
+                                inventoryManager.updateInventory("Gauntlets",toAdd,List.of());
                                 break;
                             case 4:
-                                inventoryManager.updateInventory("LegsInv",toAdd,List.of());
+                                inventoryManager.updateInventory("LegArmour",toAdd,List.of());
                                 break;
                         }
                         inventoryManager.buildInventory();
@@ -131,16 +131,16 @@ public class App
                         switch (option3)
                         {
                             case 1:
-                                inventoryManager.updateInventory("HelmsInv",List.of(),toRemove);
+                                inventoryManager.updateInventory("Helms",List.of(),toRemove);
                                 break;
                             case 2:
-                                inventoryManager.updateInventory("ChestsInv",List.of(),toRemove);
+                                inventoryManager.updateInventory("ChestArmour",List.of(),toRemove);
                                 break;
                             case 3:
-                                inventoryManager.updateInventory("GauntletsInv",List.of(),toRemove);
+                                inventoryManager.updateInventory("Gauntlets",List.of(),toRemove);
                                 break;
                             case 4:
-                                inventoryManager.updateInventory("LegsInv",List.of(),toRemove);
+                                inventoryManager.updateInventory("LegArmour",List.of(),toRemove);
                                 break;
                         }
                         inventoryManager.buildInventory();

@@ -49,12 +49,12 @@ public class InventoryLoader extends SQLiteLoader
         try(Statement statement = connection.createStatement(); ResultSet resultSet = statement.executeQuery("select * from "+ tableName+"Inv" +" NATURAL JOIN "+tableName))
         {
             while(resultSet.next()) {
-                int id = resultSet.getInt("id");
-                String name = resultSet.getString("name");
+                int id = resultSet.getInt(1);
+                String name = resultSet.getString(2);
                 float[] stats = new float[14];
                 for(int i = 0;i<resultSet.getMetaData().getColumnCount()-2;i++)
                 {
-                    stats[i] = resultSet.getFloat(i+2);
+                    stats[i] = (float) Math.round(resultSet.getFloat(i + 3) * 10) /10;
                 }
                 items.add(new Item(name,id,stats));
             }
