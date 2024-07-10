@@ -37,13 +37,13 @@ public class Optimizer
         while (it.hasNext())
         {
             Item item = it.next();
-            if(!hm.containsKey(item.weight))
+            if(!hm.containsKey(item.stats[13]))
             {
-                hm.put(item.weight,item.stats[priority]);
+                hm.put(item.stats[13],item.stats[priority]);
             }
-            else if (hm.get(item.weight) < item.stats[priority])
+            else if (hm.get(item.stats[13]) < item.stats[priority])
             {
-                hm.put(item.weight,item.stats[priority]);
+                hm.put(item.stats[13],item.stats[priority]);
             }
             else
             {
@@ -54,9 +54,8 @@ public class Optimizer
     public void add_naked(List<Item>items)
     {
         String name = "Naked";
-        float[] stats = new float[13];
-        float weight = 0;
-        Item item = new Item(name,stats,weight);
+        float[] stats = new float[14];
+        Item item = new Item(name,stats);
         items.add(item);
     }
     public void preprocess()
@@ -76,28 +75,28 @@ public class Optimizer
         List<Item> bestSet = new ArrayList<>();
         float remaining_weight = weight_limit;
         for(Item chest : chests){
-            if(chest.weight >remaining_weight)
+            if(chest.stats[13] >remaining_weight)
             {
                 continue;
             }
-            remaining_weight = weight_limit - chest.weight;
+            remaining_weight = weight_limit - chest.stats[13];
             for (Item gauntlets : gauntlets)
             {
-                if(gauntlets.weight > remaining_weight)
+                if(gauntlets.stats[13] > remaining_weight)
                 {
                     continue;
                 }
-                remaining_weight = weight_limit - chest.weight - gauntlets.weight;
+                remaining_weight = weight_limit - chest.stats[13] - gauntlets.stats[13];
                 for(Item helm: helms)
                 {
-                    if(helm.weight > remaining_weight)
+                    if(helm.stats[13] > remaining_weight)
                     {
                         continue;
                     }
-                    remaining_weight = weight_limit - chest.weight- gauntlets.weight - helm.weight;
+                    remaining_weight = weight_limit - chest.stats[13]- gauntlets.stats[13] - helm.stats[13];
                     for(Item legArmour: legArmour)
                     {
-                        if(legArmour.weight > remaining_weight)
+                        if(legArmour.stats[13] > remaining_weight)
                         {
                             continue;
                         }

@@ -1,24 +1,14 @@
-import GUI.MainFrame;
-import item.Item;
-import loader.DataLoader;
-import optimizer.Optimizer;
-import loader.CsvLoader;
-
-import java.util.List;
+import loader.DataManager;
 
 public class App
 {
-    private final Inventory inventory;
-    private final MainFrame mainFrame;
-    private Optimizer optimizer;
+    private final DataManager dataManager;
     public App()
     {
-        inventory = Inventory.getInstance();
-        mainFrame = new MainFrame();
+        dataManager = new DataManager();
     }
     public void run()
     {
-        DataLoader dataLoader = new DataLoader();
-        dataLoader.loadFromCsv();
+        dataManager.loadFromCsv();
     }
 }
