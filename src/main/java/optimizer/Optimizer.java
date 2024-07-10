@@ -1,6 +1,7 @@
 package optimizer;
 
 import item.Item;
+import itemsets.Inventory;
 
 import java.util.*;
 
@@ -10,6 +11,7 @@ public class Optimizer
     private List<Item> chests;
     private List<Item> gauntlets;
     private List<Item> legArmour;
+    private final Inventory inventory;
     private int priority;
     private float weight_limit;
     private float base_weight;
@@ -19,12 +21,15 @@ public class Optimizer
     private Item bestGauntlet;
     private Item bestLeg;
     private float coefficient;
-    public Optimizer(List<Item> helms, List<Item> chests, List<Item> gauntlets, List<Item> legArmour)
+    private float minPoiseLevel;
+
+    public Optimizer(Inventory inventory)
     {
-        this.helms = helms;
-        this.chests = chests;
-        this.gauntlets = gauntlets;
-        this.legArmour = legArmour;
+        this.inventory = inventory;
+        helms = inventory.getHelms();
+        chests = inventory.getChestArmour();
+        gauntlets = inventory.getGauntlets();
+        legArmour = inventory.getLegArmour();
     }
     public void eliminate_suboptimal(List<Item> items, int priority)
     {
@@ -58,13 +63,17 @@ public class Optimizer
         eliminate_suboptimal(gauntlets, priority);
         eliminate_suboptimal(legArmour, priority);
     }
-    public void setupBaseState(Item helm, Item chest, Item gauntlet, Item leg, float base_weight)
+    public void setupBaseState(Item helm, Item chest, Item gauntlet, Item leg, float base_weight, int priority, float weight_limit, float coefficient, float minPoiseLevel)
     {
         bestHelm = helm;
         bestChest = chest;
         bestGauntlet = gauntlet;
         bestLeg = leg;
+        this.priority = priority;
+        this.weight_limit = weight_limit;
+        this.coefficient = coefficient;
         this.base_weight = base_weight;
+        this.minPoiseLevel = minPoiseLevel;
         if(helm != null)
         {
             this.base_weight += helm.stats[13];
@@ -81,9 +90,11 @@ public class Optimizer
         {
             this.base_weight += leg.stats[13];
         }
+        preprocess();
     }
-    public List<Item> findBestSet(int minPoiseLevel)
+    public List<Item> findBestSet()
     {
+        boolean done = false;
         if(base_weight > coefficient*weight_limit)
         {
             return null;
@@ -139,6 +150,7 @@ public class Optimizer
                         }
                         if(chest.stats[priority] + leg.stats[priority] + helm.stats[priority] + gauntlet.stats[priority] > best)
                         {
+                            done=true;
                             best = chest.stats[priority] + leg.stats[priority] + helm.stats[priority] + gauntlet.stats[priority];
                             bestHelm = helm;
                             bestChest = chest;
@@ -149,10 +161,10 @@ public class Optimizer
                 }
             }
         }
-        assert bestLeg != null;
-        assert bestGauntlet != null;
-        assert bestChest != null;
-        assert bestHelm != null;
+        if(!done)
+        {
+            return null;
+        }
         return List.of(bestHelm,bestChest,bestGauntlet,bestLeg);
     }
 
