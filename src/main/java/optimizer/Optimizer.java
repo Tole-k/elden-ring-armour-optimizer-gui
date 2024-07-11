@@ -32,39 +32,28 @@ public class Optimizer
         gauntlets = inventory.getGauntlets();
         legArmour = inventory.getLegArmour();
     }
-    public void eliminate_suboptimal(List<Item> items, int priority)
+    public List<Item> eliminate_suboptimal(List<Item> items, int priority)
     {
         Map<Float, Item> hm = new HashMap<>();
-        Iterator<Item> it = items.iterator();
-        while (it.hasNext())
-        {
-            Item item = it.next();
-            if(!hm.containsKey(item.stats[13]))
+        for (Item item : items) {
+            if (!hm.containsKey(item.stats[13]))
             {
-                hm.put(item.stats[13],item);
+                hm.put(item.stats[13], item);
             }
             else if (hm.get(item.stats[13]).stats[priority] < item.stats[priority])
             {
-                hm.put(item.stats[13],item);
+                hm.put(item.stats[13], item);
             }
             else if (hm.get(item.stats[13]).stats[priority] == item.stats[priority])
             {
-                double itemSum = IntStream.range(0,item.stats.length).mapToDouble(i->item.stats[i]).sum();
-                double othersum = IntStream.range(0,hm.get(item.stats[13]).stats.length).mapToDouble(i->hm.get(item.stats[13]).stats[i]).sum();
-                if(itemSum>othersum)
-                {
-                    hm.put(item.stats[13],item);
+                double itemSum = IntStream.range(0, item.stats.length).mapToDouble(i -> item.stats[i]).sum();
+                double othersum = IntStream.range(0, hm.get(item.stats[13]).stats.length).mapToDouble(i -> hm.get(item.stats[13]).stats[i]).sum();
+                if (itemSum > othersum) {
+                    hm.put(item.stats[13], item);
                 }
-                else
-                {
-                    it.remove();
-                }
-            }
-            else
-            {
-                it.remove();
             }
         }
+        return new ArrayList<>(hm.values());
     }
     public void preprocess()
     {
@@ -72,10 +61,10 @@ public class Optimizer
         chests.add(naked);
         gauntlets.add(naked);
         legArmour.add(naked);
-        eliminate_suboptimal(helms, priority);
-        eliminate_suboptimal(chests, priority);
-        eliminate_suboptimal(gauntlets, priority);
-        eliminate_suboptimal(legArmour, priority);
+        helms = eliminate_suboptimal(helms, priority);
+        chests = eliminate_suboptimal(chests, priority);
+        gauntlets = eliminate_suboptimal(gauntlets, priority);
+        legArmour = eliminate_suboptimal(legArmour, priority);
     }
     public void setupBaseState(Item helm, Item chest, Item gauntlet, Item leg, float base_weight, int priority, float weight_limit, float coefficient, float minPoiseLevel)
     {
@@ -145,10 +134,6 @@ public class Optimizer
                         if(chest.stats[12] + leg.stats[12] + helm.stats[12] + gauntlet.stats[12] < minPoiseLevel)
                         {
                             continue;
-                        }
-                        if(chest.id==70 && gauntlet.id==100 && leg.id == 49)
-                        {
-                            System.out.println("siema");
                         }
                         if(calcDefense(chest.stats[priority],leg.stats[priority],helm.stats[priority],gauntlet.stats[priority]) > best)
                         {
