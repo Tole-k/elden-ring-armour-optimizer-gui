@@ -43,6 +43,7 @@ public class ArmouryManager {
         armoury.setGauntlets(armouryLoader.loadFromArmoury("Gauntlets"));
         armoury.setLegArmour(armouryLoader.loadFromArmoury("LegArmour"));
         armouryLoader.disconnect();
+        armoury.reSort();
     }
     public List<Item> showHelms()
     {

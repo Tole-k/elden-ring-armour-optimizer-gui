@@ -14,19 +14,27 @@ public class InventoryManager {
         inventoryLoader = new InventoryLoader();
         inventory = new Inventory();
     }
-    public void updateInventory(String tableName, List<Integer>toAdd, List<Integer>toRemove)
-    {
+
+    public void addToInventory(String tableName, List<Integer> toAdd) {
         inventoryLoader.connect();
         for(int id : toAdd)
         {
             inventoryLoader.addToInventory(tableName,id);
         }
+        inventoryLoader.disconnect();
+        buildInventory();
+    }
+
+    public void removeFromInventory(String tableName, List<Integer> toRemove) {
+        inventoryLoader.connect();
         for(int id : toRemove)
         {
             inventoryLoader.removeFromInventory(tableName,id);
         }
         inventoryLoader.disconnect();
+        buildInventory();
     }
+
     public void buildInventory()
     {
         inventoryLoader.connect();
@@ -35,6 +43,7 @@ public class InventoryManager {
         inventory.setGauntlets(inventoryLoader.showInventory("Gauntlets"));
         inventory.setLegArmour(inventoryLoader.showInventory("LegArmour"));
         inventoryLoader.disconnect();
+        inventory.reSort();
     }
     public List<Item> optimize(int helmId, int chestId, int gauntletId, int legId, float base_weight, float weight_limit, float coefficient, float minPoiseLevel, int priority)
     {
