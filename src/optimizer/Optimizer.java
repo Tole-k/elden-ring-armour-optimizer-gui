@@ -82,7 +82,7 @@ public class Optimizer
     public List<Item> findBestSet()
     {
         boolean done = false;
-        if(base_weight >= coefficient*weight_limit)
+        if((float) Math.round(base_weight * 10) /10 >= (float) Math.round(coefficient * weight_limit * 10) /10)
         {
             return null;
         }
@@ -109,25 +109,25 @@ public class Optimizer
         float best = -1;
         for(Item chest:chests)
         {
-            if(chest.stats[13] + base_weight >= coefficient*weight_limit)
+            if((float) Math.round((chest.stats[13] + base_weight) * 10) /10 >= (float) Math.round(coefficient * weight_limit * 10) /10)
             {
                 continue;
             }
             for(Item leg:legArmour)
             {
-                if(chest.stats[13] + leg.stats[13] + base_weight >= coefficient*weight_limit)
+                if((float) Math.round((chest.stats[13] + leg.stats[13] + base_weight) * 10) /10 >= (float) Math.round(coefficient * weight_limit * 10) /10)
                 {
                     continue;
                 }
                 for(Item helm:helms)
                 {
-                    if(chest.stats[13] + leg.stats[13] + helm.stats[13] + base_weight >= coefficient*weight_limit)
+                    if((float) Math.round((chest.stats[13] + leg.stats[13] + helm.stats[13] + base_weight) * 10) /10 >= (float) Math.round(coefficient * weight_limit * 10) /10)
                     {
                         continue;
                     }
                     for(Item gauntlet:gauntlets)
                     {
-                        if (chest.stats[13] + leg.stats[13] + helm.stats[13] + gauntlet.stats[13] + base_weight >= coefficient*weight_limit)
+                        if ((float) Math.round((chest.stats[13] + leg.stats[13] + helm.stats[13] + gauntlet.stats[13] + base_weight) * 10) /10 >= (float) Math.round(coefficient * weight_limit * 10) /10)
                         {
                             continue;
                         }
