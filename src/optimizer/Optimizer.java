@@ -61,10 +61,10 @@ public class Optimizer
         chests.add(naked);
         gauntlets.add(naked);
         legArmour.add(naked);
-        helms = eliminate_suboptimal(helms, priority);
-        chests = eliminate_suboptimal(chests, priority);
-        gauntlets = eliminate_suboptimal(gauntlets, priority);
-        legArmour = eliminate_suboptimal(legArmour, priority);
+        // helms = eliminate_suboptimal(helms, priority);
+        // chests = eliminate_suboptimal(chests, priority);
+        // gauntlets = eliminate_suboptimal(gauntlets, priority);
+        // legArmour = eliminate_suboptimal(legArmour, priority);
     }
     public void setupBaseState(Item helm, Item chest, Item gauntlet, Item leg, float base_weight, int priority, float weight_limit, float coefficient, float minPoiseLevel)
     {

@@ -7,6 +7,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ListIterator;
+
 import item.Item;
 
 public class MainFrame extends JFrame {
@@ -66,16 +68,59 @@ public class MainFrame extends JFrame {
         setVisible(true);
     }
 
+    public boolean itemInList(Item item, List<Item> list) {
+        for (Item i : list) {
+            if (i.id == item.id) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public void initializeLists() {
         helmsInv.setListData(inventoryManager.showHelms().toArray());
         chestsInv.setListData(inventoryManager.showChests().toArray());
         gauntletsInv.setListData(inventoryManager.showGauntlets().toArray());
         legsInv.setListData(inventoryManager.showLegs().toArray());
 
-        helms.setListData(armouryManager.showHelms().toArray());
-        chests.setListData(armouryManager.showChests().toArray());
-        gauntlets.setListData(armouryManager.showGauntlets().toArray());
-        legs.setListData(armouryManager.showLegs().toArray());
+        List<Item> helmsList = armouryManager.showHelms();
+        List<Item> chestList = armouryManager.showChests();
+        List<Item> gauntletList = armouryManager.showGauntlets();
+        List<Item> legList = armouryManager.showLegs();
+        ListIterator<Item> iterator = helmsList.listIterator();
+
+
+        while (iterator.hasNext()) {
+            Item item = iterator.next();
+            if (itemInList(item, inventoryManager.showHelms())) {
+                iterator.remove();
+            }
+        }
+        iterator = chestList.listIterator();
+        while (iterator.hasNext()) {
+            Item item = iterator.next();
+            if (itemInList(item, inventoryManager.showChests())) {
+                iterator.remove();
+            }
+        }
+        iterator = gauntletList.listIterator();
+        while (iterator.hasNext()) {
+            Item item = iterator.next();
+            if (itemInList(item, inventoryManager.showGauntlets())) {
+                iterator.remove();
+            }
+        }
+        iterator = legList.listIterator();
+        while (iterator.hasNext()) {
+            Item item = iterator.next();
+            if (itemInList(item, inventoryManager.showLegs())) {
+                iterator.remove();
+            }
+        }
+        helms.setListData(helmsList.toArray());
+        chests.setListData(chestList.toArray());
+        gauntlets.setListData(gauntletList.toArray());
+        legs.setListData(legList.toArray());
 
         list1.setListData(inventoryManager.showHelms().toArray());
         list1.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
