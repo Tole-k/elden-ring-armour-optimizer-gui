@@ -1,4 +1,5 @@
 package managers;
+
 import csv.CsvReader;
 import item.Item;
 import itemsets.Armoury;
@@ -14,29 +15,31 @@ public class ArmouryManager {
     private List<Item> chestsArmour;
     private List<Item> gauntlets;
     private List<Item> legArmour;
+
     public ArmouryManager() {
         csvReader = new CsvReader();
         armouryLoader = new ArmouryLoader();
         armoury = new Armoury();
     }
-    public void updateDatabase()
-    {
+
+    public void updateDatabase() {
         helms = csvReader.load("res/helms.csv");
         chestsArmour = csvReader.load("res/chests.csv");
         gauntlets = csvReader.load("res/gauntlets.csv");
         legArmour = csvReader.load("res/legs.csv");
         armouryLoader.connect();
         armouryLoader.deleteTable("Helms");
-        armouryLoader.loadIntoArmoury("Helms",helms);
+        armouryLoader.loadIntoArmoury("Helms", helms);
         armouryLoader.deleteTable("ChestArmour");
-        armouryLoader.loadIntoArmoury("ChestArmour",chestsArmour);
+        armouryLoader.loadIntoArmoury("ChestArmour", chestsArmour);
         armouryLoader.deleteTable("Gauntlets");
-        armouryLoader.loadIntoArmoury("Gauntlets",gauntlets);
+        armouryLoader.loadIntoArmoury("Gauntlets", gauntlets);
         armouryLoader.deleteTable("LegArmour");
-        armouryLoader.loadIntoArmoury("LegArmour",legArmour);
+        armouryLoader.loadIntoArmoury("LegArmour", legArmour);
         armouryLoader.disconnect();
     }
-    public void buildArmoury(){
+
+    public void buildArmoury() {
         armouryLoader.connect();
         armoury.setHelms(armouryLoader.loadFromArmoury("Helms"));
         armoury.setChestArmour(armouryLoader.loadFromArmoury("ChestArmour"));
@@ -45,20 +48,20 @@ public class ArmouryManager {
         armouryLoader.disconnect();
         armoury.reSort();
     }
-    public List<Item> showHelms()
-    {
+
+    public List<Item> showHelms() {
         return armoury.getHelms();
     }
-    public List<Item> showChests()
-    {
+
+    public List<Item> showChests() {
         return armoury.getChestArmour();
     }
-    public List<Item> showGauntlets()
-    {
+
+    public List<Item> showGauntlets() {
         return armoury.getGauntlets();
     }
-    public List<Item> showLegs()
-    {
+
+    public List<Item> showLegs() {
         return armoury.getLegArmour();
     }
 }

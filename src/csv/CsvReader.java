@@ -1,10 +1,13 @@
 package csv;
+
 import item.Item;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+
 public class CsvReader {
     public List<Item> load(String filePath) {
         List<Item> items = new ArrayList<>();
@@ -28,7 +31,7 @@ public class CsvReader {
                         scanner.nextFloat(),
                         scanner.nextFloat(),
                         scanner.nextFloat()};
-                Item item = new Item(name,stats);
+                Item item = new Item(name, stats);
                 items.add(item);
             }
             return items;

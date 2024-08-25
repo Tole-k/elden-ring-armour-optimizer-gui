@@ -1,4 +1,4 @@
 package itemsets;
 
-public class Inventory extends ItemSet
-{}
+public class Inventory extends ItemSet {
+}

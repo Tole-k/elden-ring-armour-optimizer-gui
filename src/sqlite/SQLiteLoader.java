@@ -6,7 +6,8 @@ import java.util.logging.Logger;
 
 public class SQLiteLoader {
     private final String connectionString = "jdbc:sqlite:db/database.db";
-    protected Connection connection=null;
+    protected Connection connection = null;
+
     public void connect() {
         try {
             connection = DriverManager.getConnection(connectionString);
@@ -14,6 +15,7 @@ public class SQLiteLoader {
             System.out.println(e.getMessage());
         }
     }
+
     public boolean tableExists(String tableName) {
         try {
             DatabaseMetaData meta = connection.getMetaData();
@@ -23,18 +25,19 @@ public class SQLiteLoader {
             throw new RuntimeException(e);
         }
     }
-    public void deleteTable(String tableName){
-        if(tableExists(tableName))
-        {
+
+    public void deleteTable(String tableName) {
+        if (tableExists(tableName)) {
             try {
                 Statement statement = connection.createStatement();
-                statement.executeUpdate("DELETE FROM "+tableName);
+                statement.executeUpdate("DELETE FROM " + tableName);
                 statement.close();
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }
         }
     }
+
     public void disconnect() {
         try {
             connection.close();
