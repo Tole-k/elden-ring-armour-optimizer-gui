@@ -5,7 +5,9 @@ import itemsets.Inventory;
 import optimizer.Optimizer;
 import sqlite.InventoryLoader;
 
+import java.util.Comparator;
 import java.util.List;
+import java.util.Comparator;
 
 public class InventoryManager {
     private final InventoryLoader inventoryLoader;
@@ -56,20 +58,29 @@ public class InventoryManager {
         return optimizer.findBestSet();
     }
 
+
     public List<Item> showHelms() {
-        return inventory.getHelms();
+        List<Item> helms = inventory.getHelms();
+        helms.sort(Comparator.comparing(item -> item.name));
+        return helms;
     }
 
     public List<Item> showChests() {
-        return inventory.getChestArmour();
+        List<Item> chestArmour = inventory.getChestArmour();
+        chestArmour.sort(Comparator.comparing(item -> item.name));
+        return chestArmour;
     }
 
     public List<Item> showGauntlets() {
-        return inventory.getGauntlets();
+        List<Item> gauntlets = inventory.getGauntlets();
+        gauntlets.sort(Comparator.comparing(item -> item.name));
+        return gauntlets;
     }
 
     public List<Item> showLegs() {
-        return inventory.getLegArmour();
+        List<Item> legArmour = inventory.getLegArmour();
+        legArmour.sort(Comparator.comparing(item -> item.name));
+        return legArmour;
     }
 }
 

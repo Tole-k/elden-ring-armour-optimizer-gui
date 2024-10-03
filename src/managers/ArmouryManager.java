@@ -5,6 +5,7 @@ import item.Item;
 import itemsets.Armoury;
 import sqlite.ArmouryLoader;
 
+import java.util.Comparator;
 import java.util.List;
 
 public class ArmouryManager {
@@ -50,18 +51,26 @@ public class ArmouryManager {
     }
 
     public List<Item> showHelms() {
-        return armoury.getHelms();
+        List<Item> helms = armoury.getHelms();
+        helms.sort(Comparator.comparing(item -> item.name));
+        return helms;
     }
 
     public List<Item> showChests() {
-        return armoury.getChestArmour();
+        List<Item> chestArmour = armoury.getChestArmour();
+        chestArmour.sort(Comparator.comparing(item -> item.name));
+        return chestArmour;
     }
 
     public List<Item> showGauntlets() {
-        return armoury.getGauntlets();
+        List<Item> gauntlets = armoury.getGauntlets();
+        gauntlets.sort(Comparator.comparing(item -> item.name));
+        return gauntlets;
     }
 
     public List<Item> showLegs() {
-        return armoury.getLegArmour();
+        List<Item> legArmour = armoury.getLegArmour();
+        legArmour.sort(Comparator.comparing(item -> item.name));
+        return legArmour;
     }
 }
